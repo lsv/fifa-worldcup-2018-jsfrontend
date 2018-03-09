@@ -4,6 +4,7 @@
     "module": "es2015",
     "strict": true,
     "jsx": "preserve",
+    "strictNullChecks": false,
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
