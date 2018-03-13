@@ -1,27 +1,23 @@
 <template>
-  <div id="app">
-    <router-view/>
-    <div v-if="loading">Loading!!!</div>
-    <div v-if="!loading">No more loading!</div>
-    <div v-if="!loading" v-html="data"></div>
-  </div>
+    <div id="app">
+        <div v-if="loading">Loading!!!</div>
+        <router-view v-show="!loading" />
+    </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+    import {Component, Vue} from 'vue-property-decorator';
 
-@Component({
-    computed: {
-        loading() {
-            return this.$store.state.loading;
+    @Component({
+        computed: {
+            loading() {
+                return this.$store.state.loading;
+            },
         },
-        data() {
-            return this.$store.state.data;
+        created() {
+            this.$store.dispatch('loadData');
         },
-    },
-    created() {
-        this.$store.dispatch('loadData');
-    },
-})
-export default class App extends Vue {}
+    })
+    export default class App extends Vue {
+    }
 </script>

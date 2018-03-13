@@ -10,7 +10,7 @@ const DATAURL = 'https://cdn.rawgit.com/lsv/fifa-worldcup-2018/master/data.json'
 export default new Vuex.Store({
     state: {
         loading: false,
-        data: {},
+        data:  {},
     },
     mutations: {
         ['LOADING'](state, payload) {

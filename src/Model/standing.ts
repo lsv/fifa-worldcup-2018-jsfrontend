@@ -47,6 +47,14 @@ class StandingModel {
         return this.goalsAgainst;
     }
 
+    public getGoalsDifference(): number {
+        return this.getGoalsFor() - this.getGoalsAgainst();
+    }
+
+    public getPoints(): number {
+        return (this.getWins() * 3) + this.getDraws();
+    }
+
     public addPlayed(): void {
         this.played += 1;
     }

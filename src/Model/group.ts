@@ -18,6 +18,10 @@ class GroupModel {
         return this.name;
     }
 
+    public getDisplayName(): string {
+        return this.getName().toUpperCase();
+    }
+
     public getStandings(): StandingModel[] {
         return this.standings;
     }

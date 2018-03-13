@@ -61,7 +61,7 @@ class GroupParser {
     private static parseStandingMatch(standings: StandingModel[], match: MatchModel, isHometeam: boolean): StandingModel[] {
         const team = isHometeam ? match.getHomeTeam() : match.getAwayTeam();
         let index = standings.findIndex((value) => value.getTeam() === team);
-        if (! index) {
+        if (index === -1) {
             standings.push(new StandingModel(team));
             index = standings.findIndex((value) => value.getTeam() === team);
         }
@@ -90,6 +90,7 @@ class GroupParser {
                     standing.addLost();
                 }
             }
+            standings[index] = standing;
         }
 
         return standings;
