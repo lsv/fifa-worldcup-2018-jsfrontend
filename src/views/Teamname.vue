@@ -1,22 +1,32 @@
 <template>
-    <span v-if="!isNotTeam(team)" :data-id="team.getId()" class="team--name">
-        <i class="fa fa-info teammatches"></i>
-        <i class="hidden-xs-down flag-icon" :class="icon(team)"></i>
-        <span v-html="team.getName()"></span>
+    <span @mouseout="unhover" @mouseover="hover" v-if="!isNotTeam(team)" :data-id="'team-' + team.getId()" class="team--name">
+        <i class="flag-icon" :class="icon(team)"></i>
+        {{ team.getName() }}
     </span>
     <span v-else v-html="team"></span>
 </template>
 
-<script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+<script>
     import TeamModel from '../Model/team';
 
-    @Component({
+    export default {
         methods: {
-            icon(team: TeamModel) {
+            hover(e) {
+                const elements = document.querySelectorAll('[data-id="' + e.target.dataset.id + '"]');
+                elements.forEach((element) => {
+                    element.classList.add('team--name--hover');
+                });
+            },
+            unhover(e) {
+                const elements = document.querySelectorAll('[data-id="' + e.target.dataset.id + '"]');
+                elements.forEach((element) => {
+                    element.classList.remove('team--name--hover');
+                });
+            },
+            icon(team) {
                 return 'flag-icon-' + team.getIso2();
             },
-            isNotTeam(team: any) {
+            isNotTeam(team) {
                 return typeof team === 'string';
             },
         },
@@ -26,9 +36,5 @@
                 required: true,
             },
         },
-    })
-
-    export default class Teamname extends Vue {
-
-    }
+    };
 </script>

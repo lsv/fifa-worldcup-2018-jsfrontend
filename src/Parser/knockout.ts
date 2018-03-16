@@ -6,6 +6,7 @@ import StadiumParser from '@/Parser/stadium';
 import ChannelParser from '@/Parser/channel';
 import GroupModel from '@/Model/group';
 import TeamModel from '@/Model/team';
+import AppModel from '@/Model/app';
 
 class KnockoutParser {
     public static knockoutmatches: any = [];
@@ -13,11 +14,23 @@ class KnockoutParser {
         const output: KnockoutModel[] = [];
         Object.keys(phases).forEach((key) => {
             output.push(new KnockoutModel(
+                key,
                 phases[key].name,
                 KnockoutParser.createKnockoutMatches(phases[key].matches, groups)))
             ;
         });
         return output;
+    }
+
+    public static updateKnockouts(data: AppModel): AppModel {
+        data.getKnockouts().forEach((k: KnockoutModel) => {
+            k.getMatches().forEach((m: MatchModel) => {
+                m.setHomeTeam(this.getKnockoutTeam(m.getType(), m.getRawHometeam(), data.getGroups()));
+                m.setAwayTeam(this.getKnockoutTeam(m.getType(), m.getRawAwayteam(), data.getGroups()));
+            });
+        });
+
+        return data;
     }
 
     private static createKnockoutMatches(matches: any, groups: GroupModel[]): MatchModel[] {
@@ -33,7 +46,10 @@ class KnockoutParser {
                     ResultParser.getResult(match, 'away'),
                     DataParser.getDate(match.date),
                     stadium,
-                    ChannelParser.getChannels(match.channels))
+                    ChannelParser.getChannels(match.channels),
+                    match.type,
+                    match.home_team,
+                    match.away_team)
                 ;
                 KnockoutParser.knockoutmatches.push({ name: match.name, obj });
                 output.push(obj);
@@ -42,46 +58,51 @@ class KnockoutParser {
         return output;
     }
 
-    private static getKnockoutTeam(type: string, matchteam: string, groups: GroupModel[]): string | TeamModel {
+    private static getKnockoutTeam(type: string, matchteam: string | TeamModel, groups: GroupModel[]): string | TeamModel {
         let foundmatch;
         switch (type) {
             default:
+                return matchteam;
             case 'qualified':
-                const splitted = matchteam.split('_');
-                const foundGroup = groups.find((group) => {
-                    return group.getName() === splitted[1];
-                });
-                if (! foundGroup) {
-                    throw new Error('Group not found in ' + matchteam);
-                }
+                if (typeof matchteam === 'string') {
+                    const splitted = matchteam.split('_');
+                    const foundGroup = groups.find((group) => {
+                        return group.getName() === splitted[1];
+                    });
+                    if (!foundGroup) {
+                        throw new Error('Group not found in ' + matchteam);
+                    }
 
-                if (splitted[0] === 'winner') {
+                    if (splitted[0] === 'winner') {
+                        return foundGroup.getFinished()
+                            ? foundGroup.getStandings()[0].getTeam()
+                            : 'Winner of group ' + foundGroup.getName().toUpperCase()
+                            ;
+                    }
+
                     return foundGroup.getFinished()
-                        ? foundGroup.getStandings()[0].getTeam()
-                        : 'Winner of group ' + foundGroup.getName().toUpperCase()
+                        ? foundGroup.getStandings()[1].getTeam()
+                        : 'Runner up group ' + foundGroup.getName().toUpperCase()
                     ;
                 }
 
-                return foundGroup.getFinished()
-                    ? foundGroup.getStandings()[1].getTeam()
-                    : 'Runner up group ' + foundGroup.getName().toUpperCase()
-                ;
+                throw new Error('matchteam variable should be a string ' + matchteam + ' given');
             case 'winner':
                 foundmatch = KnockoutParser.findKnockoutMatch(matchteam);
-                if (foundmatch) {
+                if (foundmatch && foundmatch.isFinish()) {
                     return foundmatch.getWinner();
                 }
                 return 'Winner of match ' + matchteam;
             case 'loser':
                 foundmatch = KnockoutParser.findKnockoutMatch(matchteam);
-                if (foundmatch) {
+                if (foundmatch && foundmatch.isFinish()) {
                     return foundmatch.getLoser();
                 }
                 return 'Loser of match ' + matchteam;
         }
     }
 
-    private static findKnockoutMatch(matchteam: string): MatchModel | undefined {
+    private static findKnockoutMatch(matchteam: string | TeamModel): MatchModel | undefined {
         const found = KnockoutParser.knockoutmatches.find((match: any) => {
             return match.name === matchteam;
         });
@@ -90,6 +111,7 @@ class KnockoutParser {
         }
         return undefined;
     }
+
 }
 
 export default KnockoutParser;

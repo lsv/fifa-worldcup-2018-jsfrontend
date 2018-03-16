@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" class="container-fluid">
         <div v-if="loading">Loading!!!</div>
         <router-view v-show="!loading" />
     </div>
@@ -14,8 +14,9 @@
                 return this.$store.state.loading;
             },
         },
-        created() {
+        mounted() {
             this.$store.dispatch('loadData');
+            this.$store.dispatch('setDate');
         },
     })
     export default class App extends Vue {

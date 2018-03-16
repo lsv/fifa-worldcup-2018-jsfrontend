@@ -17,6 +17,17 @@ class GroupParser {
         return models;
     }
 
+    public static updateStandings(group: GroupModel) {
+        group.setStandings(this.createStandings(group.getMatches()));
+        let finish = true;
+        group.getMatches().forEach((m: MatchModel) => {
+            if (m.getHomeResult() === null || m.getAwayResult() === null) {
+                finish = false;
+            }
+        });
+        group.setFinish(finish);
+    }
+
     private static finished: boolean = false;
 
     private static createMatches(data: any): MatchModel[] {
@@ -35,7 +46,8 @@ class GroupParser {
                     ResultParser.getResult(match, 'away'),
                     DataParser.getDate(match.date),
                     stadium,
-                    ChannelParser.getChannels(match.channels))
+                    ChannelParser.getChannels(match.channels),
+                    'groupmatch')
                 ;
 
                 if (object.getHomeResult() !== null || object.getAwayResult() !== null) {
@@ -49,13 +61,63 @@ class GroupParser {
         return matches;
     }
 
-    private static createStandings(matches: MatchModel[]): StandingModel[] {
-        let standings: StandingModel[] = [];
-        matches.forEach((match) => {
-            standings = GroupParser.parseStandingMatch(standings, match, true);
-            standings = GroupParser.parseStandingMatch(standings, match, false);
+    private static sortStandings(matches: MatchModel[], standings: StandingModel[]): StandingModel[] {
+        standings.sort((a: StandingModel, b: StandingModel) => {
+            if (a.getPoints() !== b.getPoints()) {
+                return a.getPoints() < b.getPoints() ? 1 : -1;
+            }
+
+            if (a.getGoalsDifference() !== b.getGoalsDifference()) {
+                return a.getGoalsDifference() < b.getGoalsDifference() ? 1 : -1;
+            }
+
+            let match = matches.find((m: MatchModel) => {
+                const ateam = a.getTeam();
+                const bteam = b.getTeam();
+                const hometeam = m.getHomeTeam();
+                const awayteam = m.getAwayTeam();
+                if (typeof hometeam !== 'string' && typeof awayteam !== 'string' && typeof ateam !== 'string' && typeof bteam !== 'string') {
+                    return hometeam.getId() === ateam.getId() && awayteam.getId() === bteam.getId();
+                }
+            });
+            if (match) {
+                if (match.getHomeResult() > match.getAwayResult()) {
+                    return -1;
+                }
+
+                if (match.getAwayResult() > match.getHomeResult()) {
+                    return 1;
+                }
+            }
+            match = matches.find((m: MatchModel) => {
+                const ateam = a.getTeam();
+                const bteam = b.getTeam();
+                const hometeam = m.getHomeTeam();
+                const awayteam = m.getAwayTeam();
+                if (typeof hometeam !== 'string' && typeof awayteam !== 'string' && typeof ateam !== 'string' && typeof bteam !== 'string') {
+                    return hometeam.getId() === bteam.getId() && awayteam.getId() === ateam.getId();
+                }
+            });
+            if (match) {
+                if (match.getHomeResult() > match.getAwayResult()) {
+                    return 1;
+                }
+
+                if (match.getAwayResult() > match.getHomeResult()) {
+                    return -1;
+                }
+            }
         });
         return standings;
+    }
+
+    private static createStandings(matches: MatchModel[]): StandingModel[] {
+        let standings: StandingModel[] = [];
+        matches.forEach((m) => {
+            standings = GroupParser.parseStandingMatch(standings, m, true);
+            standings = GroupParser.parseStandingMatch(standings, m, false);
+        });
+        return this.sortStandings(matches, standings);
     }
 
     private static parseStandingMatch(standings: StandingModel[], match: MatchModel, isHometeam: boolean): StandingModel[] {

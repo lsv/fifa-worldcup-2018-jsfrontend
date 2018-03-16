@@ -73,13 +73,15 @@ class StandingModel {
 
     public addGoalsFor(goals: number | null): void {
         if (goals) {
-            this.goalsFor += goals;
+            goals = +this.goalsFor + +goals;
+            this.goalsFor = goals;
         }
     }
 
     public addGoalsAgainst(goals: number | null) {
         if (goals) {
-            this.goalsAgainst += goals;
+            goals = +this.goalsAgainst + +goals;
+            this.goalsAgainst = goals;
         }
     }
 

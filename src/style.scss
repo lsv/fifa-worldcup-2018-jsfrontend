@@ -1,5 +1,9 @@
+$flag-icon-css-path: '/flags';
+$fa-font-path: '/fonts';
+
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap/scss/_variables";
+@import "~font-awesome/scss/font-awesome.scss";
 
 body {
     background: #a6a2a3;
@@ -34,17 +38,19 @@ footer {
     > span {
         cursor: pointer;
     }
-    &--hover {
-        > span {
-            font-weight: bold;
-        }
+    &.team--name--hover {
+        letter-spacing: -0.4px;
+        font-weight: bold;
     }
 }
 
-.groupmatches {
+.groups {
     @extend .row;
     @extend .mb-4;
     @extend .justify-content-around;
+    &>.col {
+        flex-basis: 25%;
+    }
     & .card--group {
         @extend .mb-4;
         table {
@@ -57,9 +63,12 @@ footer {
             font-size: 0.9rem;
         }
     }
+    &:nth-child(4) {
+        @include clearfix();
+    }
 }
 
-.knockoutmatches {
+.knockouts {
     @extend .row;
     @extend .justify-content-around;
     @extend .align-items-center;
@@ -69,33 +78,29 @@ footer {
         @include media-breakpoint-down(md) {
             min-width: 100%;
         }
-        &--round_12 {
-            @extend .text-white;
-            @extend .bg-primary;
-        }
     }
 }
 
 .card--round_2 {
     @extend .text-white;
-    @extend .bg-primary;
+    @extend .bg-success;
     & > .card-header {
         @extend .text-white;
-        @extend .bg-primary;
+        @extend .bg-success;
     }
 }
 
 .card--round_2_loser {
-    @extend .text-white;
-    @extend .bg-info;
+    @extend .text-dark;
+    @extend .bg-warning;
     & > .card-header {
-        @extend .text-white;
-        @extend .bg-info;
+        @extend .text-dark;
+        @extend .bg-warning;
     }
 }
 
-.table-groupmatches,
-.table-knockoutmatches {
+.table-groups,
+.table-knockouts {
     &--result {
         margin: 5px;
         width: 2rem;
@@ -111,16 +116,15 @@ footer {
         margin-bottom: 0;
     }
     &--finished {
-        background-color: $gray-400;
     }
     &--winner {
-        background-color: $success;
+        background-color: #c3e6cb;
     }
     &--loser {
-        background-color: $danger;
+        background-color: #ff626d;
     }
     &--draw {
-        background-color: $info;
+        background-color: #bee5eb;
     }
     &--hometeam {
         white-space: nowrap;
@@ -129,7 +133,8 @@ footer {
         white-space: nowrap;
     }
 }
-.table-groupmatches {
+
+.table-groups {
     i.teammatches {display: none;}
 }
 
@@ -162,5 +167,23 @@ footer {
 #teammatchesModal {
     & .teammatches {
         display: none;
+    }
+}
+
+.gold {
+    color: #FFD700;
+}
+
+.bronze {
+    color: #cd7f32;
+}
+
+tbody.tbody {
+    &--close {
+        display: none;
+    }
+
+    &--open {
+        display: table-row-group;
     }
 }

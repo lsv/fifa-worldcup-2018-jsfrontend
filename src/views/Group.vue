@@ -1,5 +1,5 @@
 <template>
-    <div class="col">
+    <article class="col">
         <div class="card card--group">
             <div class="card-header">Group {{ group.getDisplayName() }}</div>
             <table class="table-bordered">
@@ -7,10 +7,7 @@
                 <tr>
                     <th scope="col">&nbsp;</th>
                     <th scope="col" class="text-center"><abbr title="Played">Pld</abbr></th>
-                    <th scope="col" class="hidden-lg-up text-center"><abbr title="Wins - Draws - Lost">W-D-L</abbr></th>
-                    <th scope="col" class="hidden-md-down text-center"><abbr title="Wins">W</abbr></th>
-                    <th scope="col" class="hidden-md-down text-center"><abbr title="Draws">D</abbr></th>
-                    <th scope="col" class="hidden-md-down text-center"><abbr title="Lost">L</abbr></th>
+                    <th scope="col" class="text-center"><abbr title="Wins - Draws - Lost">W-D-L</abbr></th>
                     <th scope="col" class="text-center"><abbr title="Goals">G</abbr></th>
                     <th scope="col" class="text-center"><abbr title="Goal difference">GD</abbr></th>
                     <th scope="col" class="text-center"><abbr title="Points">Pts</abbr></th>
@@ -20,10 +17,7 @@
                 <tr v-for="(standing, index) in group.getStandings()" :key="index" :class="standingpositon(index)">
                     <td><teamname :team="standing.getTeam()"></teamname></td>
                     <td class="text-center">{{ standing.getPlayed() }}</td>
-                    <td class="hidden-lg-up text-center text-nowrap">{{ standing.getWins() }} - {{ standing.getDraws() }} - {{ standing.getLosts() }}</td>
-                    <td class="hidden-md-down text-center">{{ standing.getWins() }}</td>
-                    <td class="hidden-md-down text-center">{{ standing.getDraws() }}</td>
-                    <td class="hidden-md-down text-center">{{ standing.getLosts() }}</td>
+                    <td class="text-center text-nowrap">{{ standing.getWins() }} - {{ standing.getDraws() }} - {{ standing.getLosts() }}</td>
                     <td class="text-center text-nowrap">{{ standing.getGoalsFor() }} - {{ standing.getGoalsAgainst() }}</td>
                     <td class="text-center">{{ standing.getGoalsDifference() }}</td>
                     <td class="text-center">{{ standing.getPoints() }}</td>
@@ -31,28 +25,32 @@
                 </tbody>
             </table>
             <div class="card-footer p-0">
-                <button type="button" class="close close--plus"><span>&times;</span></button>
-                <div style="display: block">
-                    <table class="table-groupmatches">
-                        <tbody>
-                            <match v-for="(match, index) in group.getMatches()" :game="match" :gametype="'groupmatches'" :key="index"></match>
-                        </tbody>
-                    </table>
-                </div>
+                <table class="table-groups">
+                    <tbody :class="[show ? 'tbody--open' : 'tbody--close']">
+                        <match v-for="(match, index) in group.getMatches()" :id="group.getName()" :game="match" :gametype="'groups'" :key="index"></match>
+                    </tbody>
+                </table>
+                <button @click="toggleShow" type="button" :class="[show ? 'close--close' : 'close--plus']" class="close"><span>&times;</span></button>
             </div>
         </div>
-    </div>
+    </article>
 </template>
 
-<script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+<script>
     import GroupModel from '../Model/group';
     import Teamname from './Teamname.vue';
     import Match from './Match.vue';
-
-    @Component({
+    export default {
+        data() {
+            return {
+                show: false,
+            };
+        },
         methods: {
-            standingpositon(index: number) {
+            toggleShow() {
+                this.show = !this.show;
+            },
+            standingpositon(index) {
                 return index === 0 ? 'table-success' : index === 1 ? 'table-info' : '';
             },
         },
@@ -66,9 +64,5 @@
             Teamname,
             Match,
         },
-    })
-
-    export default class Group extends Vue {
-
-    }
+    };
 </script>

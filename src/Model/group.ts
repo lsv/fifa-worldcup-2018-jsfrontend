@@ -26,12 +26,20 @@ class GroupModel {
         return this.standings;
     }
 
+    public setStandings(standings: StandingModel[]) {
+        this.standings = standings;
+    }
+
     public getMatches(): MatchModel[] {
         return this.matches;
     }
 
     public getFinished(): boolean {
         return this.finished;
+    }
+
+    public setFinish(finish: boolean) {
+        this.finished = finish;
     }
 }
 
