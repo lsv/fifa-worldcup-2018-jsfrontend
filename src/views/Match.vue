@@ -60,7 +60,12 @@
                     homescore = otherobject.value.trim();
                 }
 
-                if (awayscore && homescore) {
+                if ((awayscore && homescore) || awayscore === '' && homescore === '') {
+                    if (awayscore === '' && homescore === '') {
+                        awayscore = null;
+                        homescore = null;
+                    }
+
                     if (this.gametype === 'groups') {
                         this.SET_GROUP_MATCH_RESULT({
                             matchid: this.game.getId(),
