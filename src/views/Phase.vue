@@ -1,8 +1,5 @@
 <template>
     <div>
-        <header>
-            <h1>Worldcup 2018 - Russia</h1>
-        </header>
         <section class="groups" v-if="data && data.groups">
             <group v-for="(group, index) in data.groups" :group="group" :key="index"></group>
         </section>
@@ -12,12 +9,11 @@
     </div>
 </template>
 
-<script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import Group from './Group.vue';
-    import Knockout from './Knockout.vue';
+<script>
+    import Group from '../Components/Group.vue';
+    import Knockout from '../Components/Knockout.vue';
 
-    @Component({
+    export default {
         computed: {
             data() {
                 return this.$store.state.Data.data;
@@ -27,7 +23,5 @@
             Group,
             Knockout,
         },
-    })
-    export default class Home extends Vue {
-    }
+    };
 </script>

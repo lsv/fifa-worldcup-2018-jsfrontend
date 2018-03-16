@@ -7,6 +7,12 @@ import './style.scss';
 
 Vue.config.productionTip = false;
 
+// Vue.use(VueGoogleMaps, {
+//     load: {
+//         key: 'AIzaSyB9j9NDmj6GCCVvBhkFeBJZP1I0Vtg13BU',
+//     },
+// });
+
 moment.relativeTimeThreshold('m', 60);
 moment.relativeTimeThreshold('d', 3000);
 moment.relativeTimeThreshold('h', 24);

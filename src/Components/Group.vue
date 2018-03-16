@@ -2,7 +2,7 @@
     <article class="col">
         <div class="card card--group">
             <div class="card-header">Group {{ group.getDisplayName() }}</div>
-            <table class="table-bordered">
+            <table class="table-bordered" v-if="withstanding">
                 <thead>
                 <tr>
                     <th scope="col">&nbsp;</th>
@@ -30,7 +30,7 @@
                         <match v-for="(match, index) in group.getMatches()" :id="group.getName()" :game="match" :gametype="'groups'" :key="index"></match>
                     </tbody>
                 </table>
-                <button @click="toggleShow" type="button" :class="[show ? 'close--close' : 'close--plus']" class="close"><span>&times;</span></button>
+                <button v-if="withstanding" @click="toggleShow" type="button" :class="[show ? 'close--close' : 'close--plus']" class="close"><span>&times;</span></button>
             </div>
         </div>
     </article>
@@ -43,18 +43,31 @@
     export default {
         data() {
             return {
-                show: false,
+                isShow: false,
             };
         },
         methods: {
             toggleShow() {
-                this.show = !this.show;
+                this.isShow = !this.isShow;
             },
             standingpositon(index) {
                 return index === 0 ? 'table-success' : index === 1 ? 'table-info' : '';
             },
         },
+        computed: {
+            show() {
+                if (!this.withstanding) {
+                    return true;
+                }
+                return this.isShow;
+            },
+        },
         props: {
+            withstanding: {
+                type: Boolean,
+                required: false,
+                default: true,
+            },
             group: {
                 type: GroupModel,
                 required: true,

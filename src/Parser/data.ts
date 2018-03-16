@@ -13,12 +13,12 @@ class DataParser {
     }
 
     public static parse(data: any): AppModel {
-        StadiumParser.parse(data.stadiums);
+        const stadiums = StadiumParser.parse(data.stadiums);
         ChannelParser.parse(data.channels);
         TeamParser.parse(data.teams);
         const groups = GroupParser.parse(data.groups);
         const knockouts = KnockoutParser.parse(data.knockout, groups);
-        return new AppModel(groups, knockouts);
+        return new AppModel(groups, knockouts, stadiums);
     }
 
 }

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-    import KnockoutModel from './../Model/knockout';
+    import KnockoutModel from '../Model/knockout';
     import Match from './Match';
 
     export default {

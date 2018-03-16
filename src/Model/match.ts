@@ -14,10 +14,11 @@ class MatchModel {
     private stadium: StadiumModel;
     private channels: ChannelModel[] | null;
     private type: string;
+    private groupname: string;
     private rawHometeam: string|null;
     private rawAwayteam: string|null;
 
-    public constructor(id: number, homeTeam: TeamModel | string, awayTeam: TeamModel | string, homeResult: number | null, awayResult: number | null, date: Moment, stadium: StadiumModel, channels: ChannelModel[] | null, type: string, rawHometeam: string|null = null, rawAwayteam: string|null = null) {
+    public constructor(id: number, homeTeam: TeamModel | string, awayTeam: TeamModel | string, homeResult: number | null, awayResult: number | null, date: Moment, stadium: StadiumModel, channels: ChannelModel[] | null, type: string, rawHometeam: string|null = null, rawAwayteam: string|null = null, groupname: string|null = null) {
         this.id = id;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
@@ -29,6 +30,7 @@ class MatchModel {
         this.type = type;
         this.rawHometeam = rawHometeam;
         this.rawAwayteam = rawAwayteam;
+        this.groupname = groupname;
     }
 
     public getId(): number {
@@ -114,6 +116,10 @@ class MatchModel {
 
     public getRawAwayteam(): string|null {
         return this.rawAwayteam;
+    }
+
+    public getGroupname(): string|null {
+        return this.groupname;
     }
 }
 

@@ -23,7 +23,7 @@
     import { mapMutations } from 'vuex';
     import MatchModel from '../Model/match';
     import Teamname from './Teamname.vue';
-    import functions from './../static';
+    import functions from '../static';
 
     export default {
         props: {
