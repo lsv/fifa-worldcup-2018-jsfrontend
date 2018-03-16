@@ -7,21 +7,11 @@
                     map-type-id="terrain"
                     style="width: 100%; height: 100%"
             >
-                <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
-                    {{infoContent}}
-                </gmap-info-window>
-                <gmap-marker v-for="stadium in stadiums" :key="stadium.getId()" :label="label(stadium.getId())" :title="stadium.getName()" :position="{ lat: stadium.getLat(), lng: stadium.getLng() }"></gmap-marker>
+                <gmap-marker @click="setShow(stadium.getId())" v-for="stadium in stadiums" :key="stadium.getId()" :label="label(stadium.getId())" :title="stadium.getName()" :position="{ lat: stadium.getLat(), lng: stadium.getLng() }"></gmap-marker>
             </gmap-map>
         </section>
-        <section class="stadiums">
-            <div class="card card--group" v-for="stadium in stadiums">
-                <div class="card-header">{{ label(stadium.getId())}}: {{ stadium.getName() }}</div>
-                <table class="table-knockouts">
-                    <tbody class="tbody--open">
-                        <match v-for="(match, index) in stadium.getMatches()" :id="match.getGroupname()" :game="match" :gametype="match.getType()" :key="index"></match>
-                    </tbody>
-                </table>
-            </div>
+        <section class="stadiums mt-3">
+            <stadium-matches v-for="stadium in stadiums" :show="isShow(stadium.getId())" :stadium="stadium" :key="'stadiummatches_' + stadium.getId()" :label="label(stadium.getId())"></stadium-matches>
         </section>
     </div>
 </template>
@@ -29,7 +19,7 @@
 <script>
     import Vue from 'vue';
     import * as VueGoogleMaps from 'vue2-google-maps';
-    import Match from './../Components/Match.vue';
+    import StadiumMatches from './../Components/StadiumMatches';
     Vue.use(VueGoogleMaps, {
         load: {
             key: 'AIzaSyDAAJ1YmFYX3LQpNAJdBCDCpyzHYR6VHF0',
@@ -59,21 +49,21 @@
     export default {
         data() {
             return {
+                show: false,
                 center: {
                     lat: 54.3168784,
                     lng: 53.5596674,
                 },
                 zoom: 4,
-                infoOptions: {},
-                infoWindowPos: {
-                    lat: 0,
-                    lng: 0,
-                },
-                infoWinOpen: false,
-                infoContent: '',
             };
         },
         methods: {
+            isShow(id) {
+                return this.show === id;
+            },
+            setShow(id) {
+                this.show = id;
+            },
             label(index) {
                 const letters = Array.range('A', 'Z');
                 return letters[index - 1];
@@ -88,7 +78,7 @@
             },
         },
         components: {
-            Match,
+            StadiumMatches,
         },
     };
 </script>

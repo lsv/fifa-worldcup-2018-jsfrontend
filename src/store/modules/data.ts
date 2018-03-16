@@ -9,15 +9,13 @@ import KnockoutParser from '@/Parser/knockout';
 const DATAURL = 'https://cdn.rawgit.com/lsv/fifa-worldcup-2018/master/data.json';
 
 const state = {
-    loading: false as boolean,
+    loading: true as boolean,
     data: null as AppModel,
 };
 
-const getters = {
-    getData(state: any) {
-        return state.data;
-    },
-};
+const getters = {};
+
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const actions = {
     loadData({commit}: {commit: any}) {
@@ -30,8 +28,10 @@ const actions = {
                 return DataParser.parse(json);
             })
             .then((data: AppModel) => {
-                commit('LOAD_DATA', data);
-                commit('LOADING', false);
+                wait(0).then(() => {
+                    commit('LOAD_DATA', data);
+                    commit('LOADING', false);
+                });
             })
         ;
     },

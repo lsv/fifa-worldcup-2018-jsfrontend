@@ -86,6 +86,9 @@
         },
         computed: {
             gameclass() {
+                if (this.gametype !== 'groups') {
+                    return 'table-knockouts';
+                }
                 return 'table-' + this.gametype;
             },
             viewDate() {

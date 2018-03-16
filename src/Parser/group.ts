@@ -47,7 +47,7 @@ class GroupParser {
                     DataParser.getDate(match.date),
                     stadium,
                     ChannelParser.getChannels(match.channels),
-                    'groupmatch',
+                    'groups',
                     null,
                     null,
                     key);
