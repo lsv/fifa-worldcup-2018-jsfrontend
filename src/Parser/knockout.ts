@@ -16,7 +16,7 @@ class KnockoutParser {
             output.push(new KnockoutModel(
                 key,
                 phases[key].name,
-                KnockoutParser.createKnockoutMatches(phases[key].matches, groups)))
+                KnockoutParser.createKnockoutMatches(phases[key].matches, groups, phases[key].name)))
             ;
         });
         return output;
@@ -33,7 +33,7 @@ class KnockoutParser {
         return data;
     }
 
-    private static createKnockoutMatches(matches: any, groups: GroupModel[]): MatchModel[] {
+    private static createKnockoutMatches(matches: any, groups: GroupModel[], key: string): MatchModel[] {
         const output: MatchModel[] = [];
         matches.forEach((match: any) => {
             const stadium = StadiumParser.getStadium(match.stadium);
@@ -49,10 +49,12 @@ class KnockoutParser {
                     ChannelParser.getChannels(match.channels),
                     match.type,
                     match.home_team,
-                    match.away_team)
+                    match.away_team,
+                    key)
                 ;
                 KnockoutParser.knockoutmatches.push({ name: match.name, obj });
                 output.push(obj);
+                stadium.addMatch(obj);
             }
         });
         return output;

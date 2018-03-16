@@ -11,7 +11,7 @@ class GroupParser {
     public static parse(groupdata: any): GroupModel[] {
         const models: GroupModel[] = [];
         Object.keys(groupdata).forEach((key) => {
-            const matches = GroupParser.createMatches(groupdata[key].matches);
+            const matches = GroupParser.createMatches(groupdata[key].matches, key);
             models.push(new GroupModel(key, GroupParser.createStandings(matches), matches, GroupParser.finished));
         });
         return models;
@@ -30,7 +30,7 @@ class GroupParser {
 
     private static finished: boolean = false;
 
-    private static createMatches(data: any): MatchModel[] {
+    private static createMatches(data: any, key: string): MatchModel[] {
         GroupParser.finished = false;
         const matches: MatchModel[] = [];
         data.forEach((match: any) => {
@@ -47,14 +47,17 @@ class GroupParser {
                     DataParser.getDate(match.date),
                     stadium,
                     ChannelParser.getChannels(match.channels),
-                    'groupmatch')
-                ;
+                    'groups',
+                    null,
+                    null,
+                    key);
 
                 if (object.getHomeResult() !== null || object.getAwayResult() !== null) {
                     GroupParser.finished = true;
                 }
 
                 matches.push(object);
+                stadium.addMatch(object);
             }
         });
 

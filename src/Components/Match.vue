@@ -23,7 +23,7 @@
     import { mapMutations } from 'vuex';
     import MatchModel from '../Model/match';
     import Teamname from './Teamname.vue';
-    import functions from './../static';
+    import functions from '../static';
 
     export default {
         props: {
@@ -86,6 +86,9 @@
         },
         computed: {
             gameclass() {
+                if (this.gametype !== 'groups') {
+                    return 'table-knockouts';
+                }
                 return 'table-' + this.gametype;
             },
             viewDate() {

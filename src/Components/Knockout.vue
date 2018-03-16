@@ -1,5 +1,5 @@
 <template>
-    <article :class="knockoutclass" class="card card--knockouts">
+    <article :class="knockoutclass" class="mb-3 card card--knockouts">
         <div class="card-header" v-html="name"></div>
         <table class="table table-vsm table-knockouts">
             <tbody>
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-    import KnockoutModel from './../Model/knockout';
+    import KnockoutModel from '../Model/knockout';
     import Match from './Match';
 
     export default {
