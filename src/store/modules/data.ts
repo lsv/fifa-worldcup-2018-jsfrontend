@@ -6,7 +6,9 @@ import GroupParser from '@/Parser/group';
 import GroupModel from '@/Model/group';
 import KnockoutParser from '@/Parser/knockout';
 
-const DATAURL = 'https://cdn.rawgit.com/lsv/fifa-worldcup-2018/master/data.json';
+const DATAURL = 'https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json
+
+';
 
 const state = {
     loading: true as boolean,
