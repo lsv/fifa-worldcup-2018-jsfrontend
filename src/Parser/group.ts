@@ -74,6 +74,10 @@ class GroupParser {
                 return a.getGoalsDifference() < b.getGoalsDifference() ? 1 : -1;
             }
 
+            if (a.getGoalsFor() !== b.getGoalsFor()) {
+                return a.getGoalsFor < b.getGoalsFor ? -1 : 1;
+            }
+
             let match = matches.find((m: MatchModel) => {
                 const ateam = a.getTeam();
                 const bteam = b.getTeam();
