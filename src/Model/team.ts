@@ -26,6 +26,10 @@ class TeamModel {
             return 1;
         }
 
+        if (this.getName() === 'England') {
+            return 1;
+        }
+
         return 0;
     }
 }
