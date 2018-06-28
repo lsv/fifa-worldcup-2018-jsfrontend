@@ -20,6 +20,14 @@ class TeamModel {
     public getIso2() {
         return this.iso2;
     }
+
+    public getWeight() {
+        if (this.getName() === 'Japan') {
+            return 1;
+        }
+
+        return 0;
+    }
 }
 
 export default TeamModel;

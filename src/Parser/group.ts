@@ -114,6 +114,13 @@ class GroupParser {
                     return -1;
                 }
             }
+
+            const aTeam = a.getTeam();
+            const bTeam = b.getTeam();
+
+            if (typeof aTeam !== 'string' && typeof bTeam !== 'string') {
+                return aTeam.getWeight() < bTeam.getWeight() ? 1 : -1;
+            }
         });
         return standings;
     }
