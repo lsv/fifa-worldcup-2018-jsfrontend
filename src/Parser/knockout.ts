@@ -53,6 +53,15 @@ class KnockoutParser {
                     match.away_team,
                     key)
                 ;
+
+                if (ResultParser.getPenaltyResult(match, 'home')) {
+                    obj.setHomePenalty(ResultParser.getPenaltyResult(match, 'home'));
+                }
+
+                if (ResultParser.getPenaltyResult(match, 'away')) {
+                    obj.setAwayPenalty(ResultParser.getPenaltyResult(match, 'away'));
+                }
+
                 KnockoutParser.knockoutmatches.push({ name: match.name, obj });
                 output.push(obj);
                 stadium.addMatch(obj);

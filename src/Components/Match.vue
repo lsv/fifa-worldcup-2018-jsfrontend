@@ -6,11 +6,13 @@
             <label :class="gameclass + '--label'">
                 <input @blur="setResult" :id="'match-' + game.getId() + '-result-home'" data-type="home" type="text" :class="gameclass + '--result'" :value="game.getHomeResult()">
             </label>
+            <span v-text="homepenalty"></span>
         </td>
         <td :class="gameclass + '--spacer'" class="text-center" :title="game.getStadium().getName()">
             <small v-text="'Match ' + game.getId()"></small>
         </td>
         <td :class="awayclass + ' ' + gameclass + '--awayteam'">
+            <span v-text="awaypenalty"></span>
             <label :class="gameclass + '--label'">
                 <input @blur="setResult" :id="'match-' + game.getId() + '-result-away'" data-type="away" type="text" :class="gameclass + '--result'" :value="game.getAwayResult()">
             </label>
@@ -103,8 +105,28 @@
             finishedclass() {
                 return this.game.isFinish() ? this.gameclass + '--finished' : '';
             },
+            homepenalty() {
+                if (this.game.getHomePenalty()) {
+                    return '(' + this.game.getHomePenalty() + ')';
+                }
+                return '';
+            },
+            awaypenalty() {
+                if (this.game.getAwayPenalty()) {
+                    return '(' + this.game.getAwayPenalty() + ')';
+                }
+                return '';
+            },
             homeclass() {
                 if (this.game.isFinish()) {
+                    if (this.game.getHomePenalty() !== null && this.game.getAwayPenalty() !== null) {
+                        if (this.game.getHomePenalty() > this.game.getAwayPenalty()) {
+                            return this.gameclass + '--winner';
+                        } else {
+                            return this.gameclass + '--loser';
+                        }
+                    }
+
                     if (this.game.getHomeResult() === this.game.getAwayResult()) {
                         return this.gameclass + '--draw';
                     }
@@ -119,6 +141,14 @@
             },
             awayclass() {
                 if (this.game.isFinish()) {
+                    if (this.game.getHomePenalty() !== null && this.game.getAwayPenalty() !== null) {
+                        if (this.game.getHomePenalty() > this.game.getAwayPenalty()) {
+                            return this.gameclass + '--loser';
+                        } else {
+                            return this.gameclass + '--winner';
+                        }
+                    }
+
                     if (this.game.getHomeResult() === this.game.getAwayResult()) {
                         return this.gameclass + '--draw';
                     }
